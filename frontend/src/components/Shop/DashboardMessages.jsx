@@ -379,6 +379,7 @@ const SellerInbox = ({
                   <img
                     src={`${item.images?.url}`}
                     className="w-[300px] h-[300px] object-cover rounded-[10px] mr-2"
+                    alt=""
                   />
                 )}
                 {item.text !== "" && (
@@ -403,10 +404,10 @@ const SellerInbox = ({
 
       {/* send message input */}
       <form
-        aria-required={true}
         className="p-3 relative w-full flex justify-between items-center"
         onSubmit={sendMessageHandler}
       >
+
         <div className="w-[30px]">
           <input
             type="file"
