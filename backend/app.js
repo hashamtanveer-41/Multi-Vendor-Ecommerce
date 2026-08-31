@@ -5,10 +5,31 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-app.use(cors({
-  origin: ['http://localhost:3000', 'https://eshop-tutorial-pyri.vercel.app'],
-  credentials: true
-}));
+// config
+if (process.env.NODE_ENV !== "PRODUCTION") {
+  require("dotenv").config({
+    path: "config/.env",
+  });
+}
+
+const defaultOrigins = ["http://localhost:3000", "https://eshop-tutorial-pyri.vercel.app"];
+const envOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((origin) => origin.trim().replace(/\/$/, ""))
+  : [];
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow requests with no origin (like mobile apps, curl, server-to-server)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true); // allow access if origin is valid
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -18,12 +39,7 @@ app.use("/test", (req, res) => {
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
-// config
-if (process.env.NODE_ENV !== "PRODUCTION") {
-  require("dotenv").config({
-    path: "config/.env",
-  });
-}
+
 
 // import routes
 const user = require("./controller/user");

@@ -1,0 +1,78 @@
+services:
+  # Backend REST API Service
+  - type: web
+    name: eshop-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: DB_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: JWT_EXPIRES
+        value: 7d
+      - key: ACTIVATION_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        sync: false
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: CLOUDINARY_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: SMPT_HOST
+        sync: false
+      - key: SMPT_PORT
+        sync: false
+      - key: SMPT_MAIL
+        sync: false
+      - key: SMPT_PASSWORD
+        sync: false
+      - key: SMPT_SERVICE
+        value: gmail
+
+  # Socket.IO Real-time Service
+  - type: web
+    name: eshop-socket
+    env: node
+    plan: free
+    rootDir: socket
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: FRONTEND_URL
+        sync: false
+
+  # Frontend Static Site
+  - type: web
+    name: eshop-frontend
+    env: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    staticPublishPath: ./build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_SERVER_URL
+        sync: false
+      - key: REACT_APP_BACKEND_URL
+        sync: false
+      - key: REACT_APP_SOCKET_URL
+        sync: false

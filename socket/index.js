@@ -1,17 +1,46 @@
+require("dotenv").config({
+  path: "./.env",
+});
+
 const socketIO = require("socket.io");
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
 
-require("dotenv").config({
-  path: "./.env",
+const defaultOrigins = ["http://localhost:3000", "https://eshop-tutorial-pyri.vercel.app"];
+const envOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((origin) => origin.trim().replace(/\/$/, ""))
+  : [];
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+
+const io = socketIO(server, {
+  cors: {
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
+
 
 app.get("/", (req, res) => {
   res.send("Hello world from socket server!");

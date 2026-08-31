@@ -125,6 +125,26 @@ npm start
 
 ---
 
+## 🚀 Production Deployment & Docker
+
+### Quick Start with Docker Compose (Recommended)
+Run all full-stack services (MongoDB, Backend, Socket, and Frontend with Nginx) with a single command:
+
+```bash
+docker compose up -d --build
+```
+
+- **Frontend Application**: `http://localhost:3000`
+- **Backend API**: `http://localhost:8000`
+- **Socket Service**: `http://localhost:4000`
+- **MongoDB**: `mongodb://localhost:27017`
+
+### Cloud & VPS Deployment Guides
+For detailed step-by-step guides for deploying to **Render**, **Vercel**, **Railway**, **MongoDB Atlas**, or a self-hosted **Linux VPS (Nginx + PM2 + SSL)**, see the complete [Deployment Guide](DEPLOYMENT.md).
+
+---
+
 ## 📜 License
 This project is open-source and available under the ISC License.  
 Developed & Maintained by **Hasham Tanveer**.
+

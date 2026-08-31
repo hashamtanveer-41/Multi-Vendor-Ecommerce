@@ -35,7 +35,8 @@ router.post("/create-user", async (req, res, next) => {
 
     const activationToken = createActivationToken(user);
 
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const frontendUrl = (process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",")[0].trim() : "http://localhost:3000").replace(/\/$/, "");
+    const activationUrl = `${frontendUrl}/activation/${activationToken}`;
 
     try {
       await sendMail({

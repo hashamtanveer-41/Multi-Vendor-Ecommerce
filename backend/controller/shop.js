@@ -39,7 +39,8 @@ router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
 
     const activationToken = createActivationToken(seller);
 
-    const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+    const frontendUrl = (process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",")[0].trim() : "http://localhost:3000").replace(/\/$/, "");
+    const activationUrl = `${frontendUrl}/seller/activation/${activationToken}`;
 
     try {
       await sendMail({
